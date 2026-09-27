@@ -1,4 +1,5 @@
 import { About } from "@/components/home/About";
+import { BeyondTheDesk } from "@/components/home/BeyondTheDesk";
 import { Hero } from "@/components/home/Hero";
 import { HowItWorks } from "@/components/home/HowItWorks";
 import { Footer } from "@/components/layout/Footer";
@@ -19,6 +20,7 @@ export default function Home() {
         <Hero />
         <HowItWorks />
         <WorkspaceConfigurator />
+        <BeyondTheDesk />
         <About />
       </main>
       <Footer />

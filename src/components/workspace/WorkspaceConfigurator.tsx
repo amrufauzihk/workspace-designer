@@ -9,6 +9,7 @@ import { CheckoutView } from "../checkout/CheckoutView";
 import { ConfiguratorStepper } from "./ConfiguratorStepper";
 import { MobileActionBar } from "./MobileActionBar";
 import { PriceSummary } from "./PriceSummary";
+import { QuickAddToolbar } from "./QuickActions";
 import { ReviewPanel } from "./ReviewPanel";
 import { SelectedItems } from "./SelectedItems";
 import { ChairStep, DeskStep, DurationStep, PersonalizeStep } from "./StepPanels";
@@ -67,6 +68,9 @@ export function WorkspaceConfigurator() {
                 <div className="mx-auto max-w-xl lg:max-w-none">
                   <WorkspacePreview />
                 </div>
+              </div>
+              <div className="mx-auto w-full max-w-xl empty:hidden sm:hidden">
+                <QuickAddToolbar />
               </div>
               <div className="mx-auto w-full max-w-xl lg:max-w-none">
                 <WorkspaceControls />

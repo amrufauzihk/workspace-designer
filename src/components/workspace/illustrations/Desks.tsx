@@ -47,9 +47,16 @@ export function StudioDesk() {
 }
 
 /** Dashed outline shown before a desk is chosen. */
-export function GhostDesk() {
+export function GhostDesk({ className }: { className?: string }) {
   return (
-    <g fill="none" stroke="#B3AEA2" strokeWidth={2} strokeDasharray="8 8" strokeLinecap="round">
+    <g
+      className={className}
+      fill="none"
+      stroke="#B3AEA2"
+      strokeWidth={2}
+      strokeDasharray="8 8"
+      strokeLinecap="round"
+    >
       <path d="M320 446 H880 L916 478 H284 Z" />
       <path d="M284 478 H916 V496 H284 Z" />
       <path d="M310 496 V700 M890 496 V700" />

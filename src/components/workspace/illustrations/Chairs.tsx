@@ -43,6 +43,25 @@ export function ErgonomicChair() {
   );
 }
 
+/** Dashed outline shown before a chair is chosen. */
+export function GhostChair({ className }: { className?: string }) {
+  return (
+    <g
+      className={className}
+      fill="none"
+      stroke="#B3AEA2"
+      strokeWidth={2}
+      strokeDasharray="8 8"
+      strokeLinecap="round"
+    >
+      <rect x={530} y={512} width={140} height={46} rx={18} />
+      <path d="M548 558 V628 M652 558 V628" />
+      <rect x={516} y={628} width={168} height={24} rx={8} />
+      <path d="M536 652 L528 766 M664 652 L672 766 M600 652 V740" />
+    </g>
+  );
+}
+
 export function MinimalChair() {
   return (
     <g>

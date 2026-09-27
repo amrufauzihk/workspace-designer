@@ -37,6 +37,16 @@ export interface Product {
 
 export type RentalDuration = 1 | 3 | 6 | 12;
 
+export type ConceptCategoryId = "coffee-station" | "outdoor-gear" | "relax-zone" | "garage-space";
+
+/** An optional, illustrative category. Not rentable and never priced. */
+export interface ConceptCategory {
+  id: ConceptCategoryId;
+  name: string;
+  summary: string;
+  examples: string[];
+}
+
 export type SceneTheme = "canggu" | "ubud" | "studio";
 
 export interface WorkspaceConfiguration {

@@ -1,3 +1,4 @@
+import type { QuickActionId } from "@/lib/quick-actions";
 import type { ProductId } from "@/types/workspace";
 
 export const SCENE_WIDTH = 1200;
@@ -57,4 +58,28 @@ export function getSceneMarkers({ productIds, screenCount, monitorVariant }: Sce
   };
 
   return productIds.map((productId) => ({ productId, ...toPercent(...anchors[productId]) }));
+}
+
+export interface QuickActionAnchor {
+  left: number;
+  top: number;
+  /** `end` anchors the button's right edge, so it never grows into the screens. */
+  align: "center" | "end";
+}
+
+/** Where each quick-add button sits: on the spot the item will occupy, clear of the desk, chair and screens. */
+export function getQuickActionAnchor(id: QuickActionId, screenCount: number): QuickActionAnchor {
+  if (id === "monitor") return { ...toPercent(600, 250), align: "center" };
+  if (id === "plant") return { ...toPercent(1024, 600), align: "center" };
+
+  const layout = getScreenLayout(screenCount, "single");
+  const leftScreenEdge = screenCount > 0 ? layout.centers[0] - layout.width / 2 : Infinity;
+  return { ...toPercent(Math.min(338, leftScreenEdge - 14), 392), align: "end" };
+}
+
+/** Just right of the rightmost screen, level with its centre. */
+export function getAddScreenAnchor(screenCount: number): { left: number; top: number } {
+  const layout = getScreenLayout(screenCount, "single");
+  const rightEdge = layout.centers[layout.centers.length - 1] + layout.width / 2;
+  return toPercent(rightEdge + 38, layout.bottom - layout.height / 2);
 }

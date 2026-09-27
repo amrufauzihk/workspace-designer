@@ -79,10 +79,11 @@ export function WorkspaceControls() {
           type="button"
           onClick={toggleLabels}
           aria-pressed={showLabels}
+          title="Show numbered markers and add buttons in the room"
           className="inline-flex h-9 items-center gap-1.5 rounded-full border border-line bg-surface px-3 text-sm font-medium text-ink transition hover:border-line-strong"
         >
           {showLabels ? <Eye className="size-4" aria-hidden="true" /> : <EyeOff className="size-4" aria-hidden="true" />}
-          Markers
+          Guides
         </button>
         <ResetButton />
       </div>

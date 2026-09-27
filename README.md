@@ -25,7 +25,10 @@ Renting furniture online usually means scrolling a product list and imagining th
 
 - **Live room preview** — layered SVG illustration of desk, chair, monitors (1–3 single screens or a matched pair), monitor arm, lamp, plant, keyboard and mouse, with subtle enter/exit motion.
 - **Three room styles** — Canggu Morning, Ubud Greenery and Minimal Studio.
-- **Numbered markers and legend** — each item in the room is numbered and listed in "In this room"; markers can be toggled off.
+- **Numbered markers and legend** — each item in the room is numbered and listed in "In this room"; the **Guides** toggle hides markers and add buttons for a clean view.
+- **Contextual room actions** — once a desk is placed, **Add a monitor**, **Add a lamp** and **Place a plant** buttons appear on the spots where those items will stand, and a round **+** beside single monitors adds another screen (up to 3). On phones the same actions become a compact **Quick add** toolbar under the preview, where each chip shows its current state and a second tap removes the item. Every action calls the same store actions as the product cards, so there are no duplicate selections and prices are identical.
+- **Inviting empty state** — the empty room shows a softly pulsing outline of the desk with both desks offered right in the preview; once a desk is placed, a pulsing chair outline hints at the next step.
+- **Beyond the desk** — an optional showcase below the studio with four illustrated concept categories (Coffee Station, Outdoor Gear, Relax Zone, Garage Space), each with an expandable example kit. They are clearly labelled as illustrative concepts, are not rentable and are never added to the estimate.
 - **Guided six-step flow** — Desk → Chair → Personalize → Duration → Review → Inquiry, with a clickable stepper, locked steps until a desk and chair are chosen, and clear "why can't I continue" hints.
 - **Transparent pricing** — itemised breakdown, monthly subtotal and estimated total for 1, 3, 6 or 12 months, formatted in IDR (e.g. `Rp1.750.000`).
 - **Review screen** — every choice with an Edit shortcut plus the pricing assumptions.
@@ -39,6 +42,8 @@ Renting furniture online usually means scrolling a product list and imagining th
 | Mobile | Inquiry confirmation |
 | --- | --- |
 | ![Mobile studio](public/screenshots/mobile-studio.png) | ![Inquiry confirmation](public/screenshots/desktop-confirmation.png) |
+
+![Beyond the desk concept showcase](public/screenshots/desktop-beyond-the-desk.png)
 
 ## Tech stack
 
@@ -83,14 +88,14 @@ Open [http://localhost:3000](http://localhost:3000).
 src/
   app/                  App Router entry: layout, page, global styles and tokens
   components/
-    home/               Hero, How it works, About
+    home/               Hero, How it works, Beyond the desk, About
     layout/             Header, Footer, Logo
     workspace/          Configurator, preview, stepper, product cards, price summary
-      illustrations/    SVG scene parts (backdrop, desks, chairs, monitors, accessories)
+      illustrations/    SVG scene parts (backdrop, desks, chairs, monitors, accessories, concept vignettes)
     checkout/           Inquiry form, checkout summary, confirmation
-  data/                 Product catalog, durations, Bali delivery areas, room scenes
-  hooks/                Store hydration, derived summary, step navigation
-  lib/                  Pure logic: pricing, validation, steps, sanitising, inquiry text
+  data/                 Product catalog, concept categories, durations, Bali delivery areas, room scenes
+  hooks/                Store hydration, derived summary, step navigation, quick actions
+  lib/                  Pure logic: pricing, validation, steps, quick actions, sanitising, inquiry text
   store/                Zustand store with persistence
   types/                Shared TypeScript types
 scripts/                Thumbnail generator
@@ -103,6 +108,8 @@ public/screenshots/     README screenshots
 - **One source of truth for artwork.** The room preview and product thumbnails are drawn from the same SVG components on a shared 1200×800 canvas. Thumbnails are cropped views rendered to static files by `scripts/generate-product-images.tsx`, so products always match what appears in the room and there are no third-party image licences to worry about.
 - **Pure, tested business logic.** Pricing, validation, step rules and storage sanitising live in `src/lib` as plain functions with no React dependency, which keeps components thin and makes the rules easy to unit test.
 - **Derived, not duplicated, state.** The store holds only the raw configuration and UI state. Line items, totals, the workspace title and form errors are derived on render, so they can never drift out of sync.
+- **Contextual actions are views, not a second cart.** `src/lib/quick-actions.ts` derives each action's state (placed, status label) and the existing store command it maps to (`toggleMonitor` or `toggleAccessory`) from the current configuration. The room buttons, mobile toolbar and product cards all read and write the same store.
+- **Concepts stay outside the catalog.** The "Beyond the desk" categories live in their own data module with no prices, so they cannot enter line items or totals.
 - **Hydration-safe persistence.** The store uses `skipHydration` and rehydrates in an effect after mount, so server and client render identical markup. Persisted data goes through `sanitizeConfiguration`, which drops unknown ids, clamps quantities and falls back to defaults. Only the configuration is saved — never personal details.
 - **Static by default.** The page prerenders as static HTML; interactivity is limited to the configurator island. There are no API routes, secrets or environment variables.
 - **Honest prototype boundaries.** The inquiry creates a local draft summary only. Copy throughout the UI makes clear that prices are illustrative and nothing is booked.
@@ -129,7 +136,7 @@ All prices are illustrative monthly rates in IDR:
 
 ## Testing and quality checks
 
-- **Unit tests (Vitest):** 41 tests across pricing, configuration sanitising, inquiry helpers, validation, step rules and store actions (switching, toggling, quantity clamping, reset, persistence and tampered or corrupted storage).
+- **Unit tests (Vitest):** 51 tests across pricing, configuration sanitising, inquiry helpers, validation, step rules, store actions (switching, toggling, quantity clamping, reset, persistence and tampered or corrupted storage) and quick actions (state, no-duplicate add/remove through the store, identical pricing, button placement).
 - **Lint and types:** `npm run lint` and `npm run typecheck` pass with no warnings.
 - **Production build:** `npm run build` succeeds; `/` is prerendered as static content.
 - **Manual browser QA:** these journeys were run in a browser against the dev server:
@@ -137,7 +144,8 @@ All prices are illustrative monthly rates in IDR:
   - **B.** Change the desk, remove an item and pick 6 months — the totals recalculate correctly.
   - **C.** Submit the inquiry empty, with invalid values, then with valid values — validation, focus handling and the non-committal confirmation all behave as expected.
   - **D.** Reset — everything returns to defaults, including saved state.
-  - **Widths:** 375, 768, 1024 and 1440 px, with no horizontal overflow.
+  - **Contextual actions:** placing a desk from the empty room, adding a monitor, extra screens, a lamp and a plant from the room and the mobile toolbar, and removing them again. The product cards, legend and totals stay in sync, and the Guides toggle hides the buttons.
+  - **Widths:** 320, 375, 768, 1024 and 1440 px, with no horizontal overflow.
 - **Security:** Snyk Code static analysis reported 0 issues. `npm audit` reported 0 vulnerabilities.
 
 ## Deploying to Vercel

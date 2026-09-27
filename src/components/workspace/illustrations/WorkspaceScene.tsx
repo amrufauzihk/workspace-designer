@@ -7,7 +7,7 @@ import { getScene } from "@/data/scenes";
 import { getMonitorScreenCount } from "@/lib/workspace-utils";
 import type { WorkspaceConfiguration } from "@/types/workspace";
 import { DeskLamp, IndoorPlant, MechanicalKeyboard, Mouse } from "./Accessories";
-import { ErgonomicChair, MinimalChair } from "./Chairs";
+import { ErgonomicChair, GhostChair, MinimalChair } from "./Chairs";
 import { GhostDesk, OakDesk, StudioDesk } from "./Desks";
 import { MonitorArm, MonitorSetup } from "./Monitors";
 import { SceneBackdrop } from "./SceneBackdrop";
@@ -85,7 +85,7 @@ export function WorkspaceScene({ configuration, animated = true, className, labe
 
       <SceneBackdrop scene={scene} palette={palette} />
 
-      {!deskId && <GhostDesk />}
+      {!deskId && <GhostDesk className="animate-pulse" />}
       {slot(deskId, deskId === "oak-desk" ? <OakDesk /> : <StudioDesk />)}
       {slot(withArm ? `arm-${screenCount}-${variant}` : null, <MonitorArm count={screenCount} variant={variant} />)}
       {slot(
@@ -102,6 +102,7 @@ export function WorkspaceScene({ configuration, animated = true, className, labe
       {slot(has("mechanical-keyboard") ? "keyboard" : null, <MechanicalKeyboard />)}
       {slot(has("mouse") ? "mouse" : null, <Mouse />)}
       {slot(has("indoor-plant") ? "plant" : null, <IndoorPlant />)}
+      {deskId && !chairId && <GhostChair className="animate-pulse" />}
       {slot(chairId, chairId === "ergonomic-chair" ? <ErgonomicChair /> : <MinimalChair />)}
     </svg>
   );
