@@ -1,0 +1,15 @@
+export const BALI_DELIVERY_AREAS = [
+  "Canggu",
+  "Berawa",
+  "Pererenan",
+  "Seminyak",
+  "Kerobokan",
+  "Ubud",
+  "Uluwatu",
+  "Bingin",
+  "Jimbaran",
+  "Nusa Dua",
+  "Sanur",
+  "Denpasar",
+  "Other area in Bali",
+] as const;
